@@ -1,0 +1,41 @@
+function out=busquedagris(path,imname,nresults)
+
+oldpath=cd;
+
+cd(path)
+load resultats.mat
+
+
+I=imread(imname);
+
+nbins=length(histY(1,:));
+
+queryhistY=imhist(Iyq(:,:,1),nbins);
+
+clear I
+cd(oldpath) 
+
+for i=1:length(histY)
+    ECM(i)=algo2(queryhistY,histY(i,:));
+    
+end
+
+ascECM=sort(ECM,'ascend');
+
+for i=1:nresults
+index(i)=find(ECM==ascECM(i));
+end
+
+cd(path)
+imagefiles=dir('*.jpg');
+
+figure();
+for i=1:nresults
+subplot(round(nresults/2),2,i),imshow(imread(imagefiles(index(i)).name));
+subplot(round(nresults/2),2,i),title(imagefiles(index(i)).name);
+out(i)=imagefiles(index(i));
+
+end
+
+cd(oldpath)
+end
